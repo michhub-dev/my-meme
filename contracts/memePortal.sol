@@ -17,7 +17,7 @@ struct Memes {
 }
 Memes[] mem;
 
-    constructor() {
+    constructor() payable {
         console.log("hey yo, How are you?");
     }
 
