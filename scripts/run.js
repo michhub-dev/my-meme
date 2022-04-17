@@ -5,7 +5,9 @@ const main = async () => {
     // compile our contract and generate the necessary files in the artifacts directory 
     const memeContractFactory = await hre.ethers.getContractFactory("MemeContract");
 
-    //  Hardhat will create a local Ethereum network just for this contract
+    /*  Hardhat will create a local Ethereum network just for this contract
+    * @notice deploy the contract and fund it with 0.1 eth
+    */
     const memeContract = await memeContractFactory.deploy({
         value: hre.ethers.utils.parseEther("0.1"), 
     });
@@ -36,13 +38,19 @@ memeCount = await memeContract.getTotalMemes();
 let memeTxn = await memeContract.meme("Hey yo friends, i'm back!");
 await memeTxn.wait(); 
 
+contractBalance = await hre.ethers.provider.getBalance(
+    memeContract.address
+);
+console.log("account balance", hre.ethers.utils.formatEther(contractBalance));
+
 //  grab the memeCount one more time to see if it changed
 memeCount = await memeContract.getTotalMemes();
-
+console.log(memeCount); 
 memeTxn = await memeContract.connect(randomPerson).meme(); 
 await memeTxn.wait(); 
 
 memeCount = await memeContract.getTotalMemes(); 
+console.log(memeCount);
 
 };
 
