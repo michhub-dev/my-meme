@@ -8,6 +8,8 @@ import "hardhat/console.sol";
 contract MemeContract {
     uint256 totalMemes; 
 
+    uint256 private randNum;
+
 event NewMeme(address indexed from, uint256 timestamp, string message); 
 
 struct Memes {
@@ -19,14 +21,26 @@ Memes[] mem;
 
     constructor() payable {
         console.log("hey yo, How are you?");
+
+        // @notice set the initial randNum 
+        randNum = (block.timestamp + block.difficulty) % 100;
     }
 
     function meme(string memory _message) public {
         totalMemes += 1; 
         console.log("% has memed", msg.sender);
    mem.push(Memes(msg.sender, _message, block.timestamp));
+
+// @notice generate a new seed for the next person that sends meme
+   randNum = (block.difficulty + block.timestamp + randNum) % 100;
+
+   console.log("Random number generated: %d", randNum);
+
+// @notice give a 50% chance that the user wins the prize
+   if (randNum <= 50) {
+       console.log("you won!", msg.sender);
+   
   
-        emit NewMeme(msg.sender, block.timestamp, _message);
 
  // initiate a prize amount 
         uint256 ethAmount = 0.0001 ether; 
@@ -39,6 +53,12 @@ Memes[] mem;
         require(success, "Failed to withdraw money from contract");
     }
 
+        emit NewMeme(msg.sender, block.timestamp, _message);
+    }
+
+    function getAllMemes() public view returns(Memes[] memory) {
+    return mem;
+    }
     function getTotalMemes() public view returns(uint256) {
         console.log("we have % total memes", totalMemes);
         return totalMemes;
