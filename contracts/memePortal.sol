@@ -19,6 +19,9 @@ struct Memes {
 }
 Memes[] mem;
 
+// @notice mapping to store address with the last time a user memed at us
+mapping(address => uint256) public lastMemedAt;
+
     constructor() payable {
         console.log("hey yo, How are you?");
 
@@ -27,6 +30,15 @@ Memes[] mem;
     }
 
     function meme(string memory _message) public {
+
+        // @notice require that the current timestamp is bigger than the last timestamp we stored
+        require(lastMemedAt[msg.sender] + 10 minutes > block.timestamp, 
+            "hold on for 10mins"
+        );
+
+        // @notice update the current timestamp for the user
+        lastMemedAt[msg.sender] = block.timestamp;
+        
         totalMemes += 1; 
         console.log("% has memed", msg.sender);
    mem.push(Memes(msg.sender, _message, block.timestamp));
