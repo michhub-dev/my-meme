@@ -29,6 +29,8 @@ const main = async () => {
         contractBalance
     )); 
 
+
+
 let memeCount;
 
 // call the function to grab the # of total memes
@@ -37,6 +39,9 @@ memeCount = await memeContract.getTotalMemes();
 // do the meme 
 let memeTxn = await memeContract.meme("Hey yo friends, i'm back!");
 await memeTxn.wait(); 
+
+let memeTxn2 = await memeContract.meme("Hey yo friends, you called me again!");
+await memeTxn2.wait(); 
 
 contractBalance = await hre.ethers.provider.getBalance(
     memeContract.address
