@@ -6,7 +6,9 @@ const main = async () => {
     console.log("Account balance: ", accountBalance.toString());
   
     const memeContractFactory = await hre.ethers.getContractFactory("MemeContract");
-    const memeContract = await memeContractFactory.deploy();
+    const memeContract = await memeContractFactory.deploy({
+      value: hre.ethers.utils.parseEther("0.001"),
+    });
     await memeContract.deployed();
   
     console.log("memePortal address: ", memeContract.address);
